@@ -15,9 +15,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-//@SpringBootTest
-//@Transactional
-@DataJpaTest
+@SpringBootTest
+@Transactional
 class MemberRepositoryTest {
     @Autowired
     EntityManager em;
@@ -49,12 +48,12 @@ class MemberRepositoryTest {
     @Test
     public void 닉네임_이메일_통합검색_테스트() {
         // given
-        memberRepository.save(new Member("test1@asd.com", "1234", "hello3"));
-        memberRepository.save(new Member("TEST2@asd.com", "1234", "hello4"));
-        memberRepository.save(new Member("asdasd@asd.com", "1234", "TeSt5"));
+        memberRepository.save(new Member("test1@닉네임_이메일_통합검색_테스트.com", "1234", "hello3"));
+        memberRepository.save(new Member("닉네임_이메일_통합검색_테스트@asd.com", "1234", "hello4"));
+        memberRepository.save(new Member("asdasd@as닉네임_이메일_통합검색_테스트d.com", "1234", "TeSt5"));
 
         // when
-        int resultSize = memberRepository.search("test").size();
+        int resultSize = memberRepository.search("닉네임_이메일_통합검색_테스트").size();
 
         // then
         assertThat(resultSize).isEqualTo(3);
