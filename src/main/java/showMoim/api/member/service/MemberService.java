@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import showMoim.api.common.enums.MemberRole;
 import showMoim.api.member.dto.MemberJoinDto;
 import showMoim.api.member.entity.Member;
 import showMoim.api.member.repository.MemberRepository;
@@ -43,7 +44,8 @@ public class MemberService {
                 new Member(
                         memberJoinForm.getEmail(),
                         passwordEncoder.encode(memberJoinForm.getPassword()),
-                        memberJoinForm.getNickname()
+                        memberJoinForm.getNickname(),
+                        MemberRole.ROLE_GUEST.toString() // 최초 Member 생성 시 ROLE_GUSET 권한
                 )
         );
 

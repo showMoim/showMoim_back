@@ -1,10 +1,13 @@
 package showMoim.api.member.entity;
+
 import javax.persistence.*;
+
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import showMoim.api.common.enums.MemberRole;
 
 @Entity
@@ -24,12 +27,16 @@ public class Member {
 
     private String roles;
 
-    public Member(String email, String password, String nickname) {
+    public Member(String email, String password, String nickname, String roles) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        // 최초 Member 생성 시 ROLE_GUSET 권한
-        this.roles = MemberRole.ROLE_GUEST.toString();
+        this.roles = roles;
+    }
+
+    public Member(String email, String password, String nickname) {
+        // Role 안주면 GUEST 권한으로 기본 생성
+        this(email, password, nickname, MemberRole.ROLE_GUEST.toString());
     }
 
     /**
