@@ -1,6 +1,14 @@
 package showMoim.api.member.entity;
+
 import javax.persistence.*;
+
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import showMoim.api.common.enums.MemberRole;
 
 @Entity
 @Getter
@@ -17,9 +25,35 @@ public class Member {
 
     private String nickname;
 
-    public Member(String email, String password, String nickname) {
+    private String roles;
+
+    public Member(String email, String password, String nickname, String roles) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+        this.roles = roles;
+    }
+
+    public Member(String email, String password, String nickname) {
+        // Role 안주면 GUEST 권한으로 기본 생성
+        this(email, password, nickname, MemberRole.ROLE_GUEST.toString());
+    }
+
+    /**
+     * 콤마로 구분된 roles 문자열을 읽어서 MemberRole 의 List 로 변환
+     */
+    public List<MemberRole> getRoleList() {
+        List<MemberRole> roleList = new ArrayList<>();
+
+        if (this.roles.length() > 0) {
+            String[] roleStrings = this.roles.split(",");
+
+            for (String roleString : roleStrings) {
+                MemberRole role = MemberRole.valueOf(roleString.trim());
+                roleList.add(role);
+            }
+        }
+
+        return roleList;
     }
 }

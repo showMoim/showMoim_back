@@ -1,8 +1,10 @@
 package showMoim.api.member.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import showMoim.api.common.enums.MemberRole;
 import showMoim.api.member.dto.MemberJoinDto;
 import showMoim.api.member.entity.Member;
 import showMoim.api.member.repository.MemberRepository;
@@ -14,6 +16,7 @@ import java.util.List;
 @Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public final static String ERROR_MESSAGE_EMAIL_EXIST = "이미 존재하는 이메일 입니다.";
     public final static String ERROR_MESSAGE_PW_CONFIRM_NOT_MATCHED = "비밀번호가 일치하지 않습니다.";
@@ -40,8 +43,9 @@ public class MemberService {
         Member member = memberRepository.save(
                 new Member(
                         memberJoinForm.getEmail(),
-                        memberJoinForm.getPassword(),
-                        memberJoinForm.getNickname()
+                        passwordEncoder.encode(memberJoinForm.getPassword()),
+                        memberJoinForm.getNickname(),
+                        MemberRole.ROLE_GUEST.toString() // 최초 Member 생성 시 ROLE_GUSET 권한
                 )
         );
 

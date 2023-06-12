@@ -39,4 +39,9 @@ public class MemberController {
         // 응답
         return ApiResponse.of(ApiResponse.SUCCESS_STATUS, "회원가입 성공", null);
     }
+
+    @GetMapping("token")
+    public ApiResponse<String> tokenTest() {
+        return ApiResponse.of(ApiResponse.SUCCESS_STATUS, "토큰 인증 성공", null);
+    }
 }
