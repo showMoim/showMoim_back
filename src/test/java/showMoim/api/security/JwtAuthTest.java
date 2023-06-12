@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import showMoim.api.member.dto.MemberJoinDto;
+import showMoim.api.member.dto.MemberJoinDto.RegisterForm;
 import showMoim.api.member.dto.MemberLoginDto;
 import showMoim.api.member.service.MemberService;
 
@@ -49,13 +49,13 @@ public class JwtAuthTest {
                 .build();
 
 
-        MemberJoinDto.Form joinForm = MemberJoinDto.Form.builder()
+        RegisterForm joinRegisterForm = RegisterForm.builder()
                 .email(TEST_EMAIL_1)
                 .password(TEST_PW_1)
                 .passwordConfirm(TEST_PW_1)
                 .build();
 
-        memberService.join(joinForm);
+        memberService.join(joinRegisterForm);
     }
 
 
