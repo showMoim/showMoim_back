@@ -1,5 +1,6 @@
 package showMoim.api.member.entity;
 
+import com.google.common.base.Joiner;
 import javax.persistence.*;
 
 import lombok.*;
@@ -9,9 +10,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import showMoim.api.common.enums.MemberRole;
+import showMoim.api.member.dto.MemberJoinDto.RegisterForm;
 
 @Entity
 @Getter
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class Member {
@@ -26,6 +29,7 @@ public class Member {
     private String nickname;
 
     private String roles;
+
 
     public Member(String email, String password, String nickname, String roles) {
         this.email = email;
@@ -55,5 +59,33 @@ public class Member {
         }
 
         return roleList;
+    }
+
+    /**
+     * 권한 추가 메소드
+     */
+    public void addRole(MemberRole role) {
+        if (!this.getRoleList().contains(role)) {
+            List<MemberRole> roleList = getRoleList();
+            roleList.add(role);
+
+            this.roles = Joiner.on(',').join(roleList);
+        }
+    }
+
+    /**
+     * 비밀번호 업데이트
+     */
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * 사용자 정보 업데이트
+     */
+    public void updateProfile(RegisterForm form) {
+        if (form.getNickname() != null) {
+            this.nickname = form.getNickname();
+        }
     }
 }

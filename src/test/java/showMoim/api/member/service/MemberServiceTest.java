@@ -1,12 +1,11 @@
 package showMoim.api.member.service;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import showMoim.api.member.dto.MemberJoinDto;
+import showMoim.api.member.dto.MemberJoinDto.RegisterForm;
 import showMoim.api.member.entity.Member;
 import showMoim.api.member.repository.MemberRepository;
 
@@ -31,12 +30,12 @@ class MemberServiceTest {
         String existEmail = "exist@naver.com";
         memberRepository.save(new Member(existEmail, "1234", "nickname"));
 
-        MemberJoinDto.Form form = MemberJoinDto.Form.builder()
+        RegisterForm registerForm = RegisterForm.builder()
                 .email(existEmail)
                 .build();
 
         // when
-        Executable joinWithExistEmail = () -> memberService.join(form);
+        Executable joinWithExistEmail = () -> memberService.join(registerForm);
 
         // then
         RuntimeException e = assertThrows(RuntimeException.class, joinWithExistEmail);

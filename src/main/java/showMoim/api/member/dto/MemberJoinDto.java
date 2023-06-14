@@ -4,14 +4,16 @@ import lombok.*;
 
 public class MemberJoinDto {
     /**
-     * 회원가입 Form DTO
+     * 회원가입 관련 DTO
      */
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Form {
+    public static class RegisterForm {
         private String email;
+
+        private String code;
 
         private String nickname;
 

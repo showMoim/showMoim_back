@@ -51,6 +51,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             return authenticationManager.authenticate(authenticationToken);
         } catch (Exception e) {
+            // 로그인 실패  시 응답
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+            ApiResponse<?> responseBody = ApiResponse.of(ApiResponse.ERROR_STATUS, e.getMessage(), null);
+
+            try {
+                new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
             e.printStackTrace();
         }
 

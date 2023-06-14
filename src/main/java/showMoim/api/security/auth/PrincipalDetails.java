@@ -5,6 +5,7 @@ import java.util.Collection;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import showMoim.api.member.entity.Member;
 
@@ -17,10 +18,12 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        member.getRoleList().forEach(role -> authorities.add(() -> String.valueOf(role)));
+        ArrayList<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
+        member.getRoleList().forEach(role -> {
+            simpleGrantedAuthorities.add(new SimpleGrantedAuthority(role.toString()));
+        });
 
-        return authorities;
+        return simpleGrantedAuthorities;
     }
 
     public Member getMember() {

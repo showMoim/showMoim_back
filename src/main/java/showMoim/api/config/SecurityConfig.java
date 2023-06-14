@@ -23,31 +23,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final MemberRepository memberRepository;
 
     private static final String[] PUBLIC_API_PATTERN = {
-        "/api/member/join",
-        "/api/member/password/change"
+        "/api/member/join/**"
     };
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+        http.cors().and().csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .addFilter(corsFilter)
-                .formLogin().disable()
-                .httpBasic().disable()
-                .addFilter(getJWTAuthenticationFilter())
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), memberRepository))
-                .authorizeRequests()
-                .antMatchers(PUBLIC_API_PATTERN).permitAll()
-                .antMatchers("/api/member/**")
-                .access("hasRole('ROLE_MEMBER') or hasRole('ROLE_ADMIN') or hasRole('ROLE_GUEST')")
-                .antMatchers("/api/admin/**")
-                .access("hasRole('ROLE_ADMIN')")
-                .anyRequest().permitAll();
+            .and()
+            .addFilter(corsFilter)
+            .formLogin().disable()
+            .httpBasic().disable()
+            .addFilter(getJWTAuthenticationFilter())
+            .addFilter(new JwtAuthorizationFilter(authenticationManager(), memberRepository))
+            .authorizeRequests()
+            .antMatchers(PUBLIC_API_PATTERN).permitAll()
+            .antMatchers("/api/member/**")
+            .access("hasRole('ROLE_MEMBER') or hasRole('ROLE_ADMIN')")
+            .antMatchers("/api/admin/**")
+            .access("hasRole('ROLE_ADMIN')")
+            .anyRequest().authenticated();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
