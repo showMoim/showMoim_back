@@ -55,7 +55,7 @@ public class MemberJoinController {
     /**
      * 회원가입 API
      */
-    @PostMapping("/")
+    @PostMapping("")
     public ApiResponse<?> join(@RequestBody RegisterForm registerForm) {
         // 이메일 한번 더 검증
         memberEmailService.verifyEmail(registerForm.getEmail(), registerForm.getCode());

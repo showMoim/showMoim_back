@@ -49,15 +49,6 @@ public class MemberEmailService {
             throw new ShowMoimException(ErrorCode.EMAIL_VERIFY_FAILED);
         }
 
-        // 검증 완료 시 권한 업데이트
-        Member member = memberRepository.findByEmail(email).stream().findFirst().orElse(null);
-
-        if (member == null) {
-            throw new ShowMoimException(ErrorCode.MEMBER_NOT_EXIST);
-        }
-
-        member.addRole(MemberRole.ROLE_MEMBER);
-
         return true;
     }
 }

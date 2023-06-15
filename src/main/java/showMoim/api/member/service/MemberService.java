@@ -39,8 +39,7 @@ public class MemberService {
         // 비밀번호 검증
         this.validatePassword(form.getPassword(), form.getPasswordConfirm());
 
-        // 프로필 저장
-        this.modifyMemberProfile(form.getEmail(), form.getNickname());
+        // 이후, 프로필 쪽 유효성 검사 로직 필요
 
         // 멤버 DB 저장
         Member member = memberRepository.save(

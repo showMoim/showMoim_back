@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,6 +42,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
      */
     private void tokenAuthorization(HttpServletRequest request, HttpServletResponse response) {
         Long id = null;
+        String refreshToken = null;
 
         // 1. Access Token 추출
         String accessToken = JwtProperties.extractAccessToken(request.getHeader(JwtProperties.HEADER_STRING));
@@ -48,13 +50,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         // 2. Access Token 검증
         if (!JwtProperties.validateAccessToken(accessToken)) {
             // 3. Access Token 검증 실패 시, Refresh Token 검증
-            String refreshToken = JwtProperties.extractRefreshToken(request.getCookies());
+            refreshToken = JwtProperties.extractRefreshToken(request.getCookies());
 
             // 3-1. Refresh Token 검증 실패 시 -> 로그인 실패
             if (!JwtProperties.validateRefreshToken(refreshToken)) return;
 
-            // 4. Refresh Token 토큰 검증 성공 시, Access Token 재발급
-            log.debug("Refresh Token 재발급");
+            // 4. Refresh Token 토큰 검증 성공 시, Access Token, Refresh Token 재발급
+            log.debug("Access Token 재발급");
             id = JWT.require(Algorithm.HMAC256(JwtProperties.SECRET))
                     .build()
                     .verify(refreshToken)
@@ -68,10 +70,23 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     .asString();
 
             accessToken = JwtProperties.createToken(JwtProperties.TokenType.ACCESS_TOKEN, id, email);
+            refreshToken = JwtProperties.createToken(JwtProperties.TokenType.REFRESH_TOKEN, id, email);
 
-            // Authorization 헤더에 새로운 Access Token 추가
-            response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + accessToken);
+        } else {
+            // 2-1. Access Token 검증 성공 시, Refresh 토큰만 재발급
+            id = JWT.require(Algorithm.HMAC256(JwtProperties.SECRET))
+                .build()
+                .verify(accessToken)
+                .getClaim("id")
+                .asLong();
 
+            String email = JWT.require(Algorithm.HMAC256(JwtProperties.SECRET))
+                .build()
+                .verify(accessToken)
+                .getClaim("email")
+                .asString();
+
+            refreshToken = JwtProperties.createToken(JwtProperties.TokenType.REFRESH_TOKEN, id, email);
         }
 
         if (id == null) return;
@@ -79,6 +94,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         Member member = memberRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
         PrincipalDetails principalDetails = new PrincipalDetails(member);
+
+        // Authorization 헤더에 새로운 Access Token 추가
+        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + accessToken);
+
+        // Refresh Token 쿠키 발급
+        Cookie refreshTokenCookie = JwtProperties.createCookie(JwtProperties.TokenType.REFRESH_TOKEN, refreshToken);
+        response.addCookie(refreshTokenCookie);
+
 
         // 인증에 성공하면 Authentication 객체 생성
         Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
