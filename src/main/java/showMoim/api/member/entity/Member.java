@@ -18,6 +18,7 @@ import showMoim.api.member.dto.MemberJoinDto.RegisterForm;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class Member {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -83,9 +84,7 @@ public class Member {
     /**
      * 사용자 정보 업데이트
      */
-    public void updateProfile(RegisterForm form) {
-        if (form.getNickname() != null) {
-            this.nickname = form.getNickname();
-        }
+    public void updateProfile(String nickname) {
+        this.nickname = nickname;
     }
 }

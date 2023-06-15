@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
-    protected ResponseEntity<?> handleException(RuntimeException e) {
+    protected ResponseEntity<?> handleException(ShowMoimException e) {
         e.printStackTrace();
 
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.of(ApiResponse.ERROR_STATUS, e.getMessage(), null));
+                .body(ApiResponse.of(ApiResponse.ERROR_STATUS, e.getMessage(), e.getCode()));
     }
 }
