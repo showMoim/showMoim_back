@@ -16,31 +16,10 @@ public class MemberController {
 
 
     /**
-     * 회원가입 API
+     * 토큰으로 인증여부 검증
      */
-    @PostMapping("/join")
-    public ApiResponse<?> createMember(@RequestParam String email,
-                                       @RequestParam String nickname,
-                                       @RequestParam String password,
-                                       @RequestParam String passwordConfirm) {
-
-        // 가입 폼 DTO 빌드
-        RegisterForm registerForm = RegisterForm.builder()
-            .email(email)
-            .nickname(nickname)
-            .password(password)
-            .passwordConfirm(passwordConfirm)
-            .build();
-
-        // 가입 로직 호출
-        memberService.join(registerForm);
-
-        // 응답
-        return ApiResponse.of(ApiResponse.SUCCESS_STATUS, "회원가입 성공", null);
-    }
-
-    @GetMapping("token")
-    public ApiResponse<String> tokenTest() {
+    @GetMapping("/auth")
+    public ApiResponse<String> checkAuth() {
         return ApiResponse.of(ApiResponse.SUCCESS_STATUS, "토큰 인증 성공", null);
     }
 }
