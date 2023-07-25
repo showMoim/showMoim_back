@@ -23,7 +23,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final MemberRepository memberRepository;
 
     private static final String[] PUBLIC_API_PATTERN = {
-        "/api/member/join/**"
+        "/api/member/join/**",
+        "/api/member/login"
     };
 
     @Override
