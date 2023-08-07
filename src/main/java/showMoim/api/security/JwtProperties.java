@@ -46,11 +46,11 @@ public class JwtProperties {
                 .sign(Algorithm.HMAC256(JwtProperties.SECRET));
     }
 
-    public static Cookie createCookie(TokenType tokenType, String token) {
+    public static Cookie createCookie(TokenType tokenType, String token, Boolean httpOnly) {
         Cookie cookie = new Cookie(tokenType.cookieName, token);
         cookie.setMaxAge(tokenType.expirationTime / 1000);
         cookie.setPath("/");
-        cookie.setHttpOnly(true);
+        cookie.setHttpOnly(httpOnly);
         cookie.setSecure(true);
 
         return cookie;

@@ -91,11 +91,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 principalDetails.getMember().getEmail()
         );
 
-        // Authorization 헤더에 Access Token 추가
-        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + accessToken);
+        // Access Token 쿠키 발급
+        Cookie accessTokenCookie = JwtProperties.createCookie(JwtProperties.TokenType.ACCESS_TOKEN, accessToken, false);
+        response.addCookie(accessTokenCookie);
 
         // Refresh Token 쿠키 발급
-        Cookie refreshTokenCookie = JwtProperties.createCookie(JwtProperties.TokenType.REFRESH_TOKEN, refreshToken);
+        Cookie refreshTokenCookie = JwtProperties.createCookie(JwtProperties.TokenType.REFRESH_TOKEN, refreshToken, true);
         response.addCookie(refreshTokenCookie);
 
 

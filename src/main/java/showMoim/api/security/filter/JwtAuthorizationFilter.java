@@ -36,7 +36,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     /**
      * 토큰 검증 로직
-     * <p>
      * Authorization 헤더에서 Access Token 검증
      * Access Token 검증에 실패하면 쿠키에서 Refresh Token 검증, 성공 시 Access Token 재발급 후 헤더에 추가해서 응답
      */
@@ -53,21 +52,23 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             refreshToken = JwtProperties.extractRefreshToken(request.getCookies());
 
             // 3-1. Refresh Token 검증 실패 시 -> 로그인 실패
-            if (!JwtProperties.validateRefreshToken(refreshToken)) return;
+            if (!JwtProperties.validateRefreshToken(refreshToken)) {
+                return;
+            }
 
             // 4. Refresh Token 토큰 검증 성공 시, Access Token, Refresh Token 재발급
             log.debug("Access Token 재발급");
             id = JWT.require(Algorithm.HMAC256(JwtProperties.SECRET))
-                    .build()
-                    .verify(refreshToken)
-                    .getClaim("id")
-                    .asLong();
+                .build()
+                .verify(refreshToken)
+                .getClaim("id")
+                .asLong();
 
             String email = JWT.require(Algorithm.HMAC256(JwtProperties.SECRET))
-                    .build()
-                    .verify(refreshToken)
-                    .getClaim("email")
-                    .asString();
+                .build()
+                .verify(refreshToken)
+                .getClaim("email")
+                .asString();
 
             accessToken = JwtProperties.createToken(JwtProperties.TokenType.ACCESS_TOKEN, id, email);
             refreshToken = JwtProperties.createToken(JwtProperties.TokenType.REFRESH_TOKEN, id, email);
@@ -89,19 +90,21 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             refreshToken = JwtProperties.createToken(JwtProperties.TokenType.REFRESH_TOKEN, id, email);
         }
 
-        if (id == null) return;
+        if (id == null) {
+            return;
+        }
 
         Member member = memberRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
         PrincipalDetails principalDetails = new PrincipalDetails(member);
 
-        // Authorization 헤더에 새로운 Access Token 추가
-        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + accessToken);
+        // Access Token 쿠키 발급
+        Cookie accessTokenCookie = JwtProperties.createCookie(JwtProperties.TokenType.ACCESS_TOKEN, accessToken, false);
+        response.addCookie(accessTokenCookie);
 
         // Refresh Token 쿠키 발급
-        Cookie refreshTokenCookie = JwtProperties.createCookie(JwtProperties.TokenType.REFRESH_TOKEN, refreshToken);
+        Cookie refreshTokenCookie = JwtProperties.createCookie(JwtProperties.TokenType.REFRESH_TOKEN, refreshToken, true);
         response.addCookie(refreshTokenCookie);
-
 
         // 인증에 성공하면 Authentication 객체 생성
         Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
