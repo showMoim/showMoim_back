@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import showMoim.api.common.ApiResponse;
+import showMoim.api.member.dto.MemberJoinDto.ChangePasswordForm;
 import showMoim.api.member.dto.MemberJoinDto.RegisterForm;
 import showMoim.api.member.service.MemberEmailService;
 import showMoim.api.member.service.MemberService;
@@ -24,8 +25,7 @@ public class MemberJoinController {
     private final MemberEmailService memberEmailService;
 
     /**
-     * 회원가입 인증 메일 요청 API
-     * DBless 형태로 구성 예정
+     * 회원가입 인증 메일 요청 API (DBless 형태?)
      */
     @PostMapping("/email/verify/send")
     public ApiResponse<?> sendVerificationEmail(@RequestBody RegisterForm form) {
@@ -65,5 +65,27 @@ public class MemberJoinController {
 
         // 응답
         return ApiResponse.of(ApiResponse.SUCCESS_STATUS, "회원가입 완료", null);
+    }
+
+    /**
+     * 비밀번호 재설정 API
+     */
+    @PostMapping("/change/password")
+    public ApiResponse<?> changePassword(@RequestBody ChangePasswordForm changePasswordForm) {
+        // 이메일 한번 더 검증
+        memberEmailService.verifyEmail(changePasswordForm.getEmail(), changePasswordForm.getCode());
+
+        // 기존 비밀번호 체크
+        if (memberService.passwordMatch(changePasswordForm.getEmail(), changePasswordForm.getPreviousPassword())) {
+            // 비밀번호 맞으면 변경
+            memberService.setPassword(
+                changePasswordForm.getEmail(),
+                changePasswordForm.getNewPassword(),
+                changePasswordForm.getNewPasswordConfirm()
+            );
+        }
+
+        // 응답
+        return ApiResponse.of(ApiResponse.SUCCESS_STATUS, "비밀번호 변경 완료", null);
     }
 }
