@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import showMoim.api.common.ApiResponse;
+import showMoim.api.common.ErrorCode;
 import showMoim.api.member.dto.MemberLoginDto;
 import showMoim.api.security.JwtProperties;
 import showMoim.api.security.auth.PrincipalDetails;
@@ -51,11 +52,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             return authenticationManager.authenticate(authenticationToken);
         } catch (Exception e) {
-            // 로그인 실패  시 응답
+            // 로그인 실패 시 응답
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-            ApiResponse<?> responseBody = ApiResponse.of(ApiResponse.ERROR_STATUS, e.getMessage(), null);
+            ApiResponse<?> responseBody = ApiResponse.of(ApiResponse.ERROR_STATUS, ErrorCode.AUTH_FAILED.getMessage(), ErrorCode.AUTH_FAILED.getCode());
 
             try {
                 new ObjectMapper().writeValue(response.getOutputStream(), responseBody);

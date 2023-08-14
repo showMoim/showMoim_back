@@ -9,6 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum ErrorCode {
+    AUTH_FAILED("ERR000", "로그인에 실패했습니다."),
     MEMBER_NOT_EXIST("ERR001", "존재하지 않는 회원입니다."),
     EMAIL_ALREADY_EXIST("ERR002", "이미 존재하는 메일입니다."),
     PASSWORD_INVALID("ERR003", "비밀번호 형식에 맞지 않습니다."),
