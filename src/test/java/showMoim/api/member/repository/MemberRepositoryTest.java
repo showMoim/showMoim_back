@@ -3,15 +3,12 @@ package showMoim.api.member.repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import showMoim.api.member.entity.Member;
-import showMoim.api.member.repository.MemberRepository;
+import showMoim.api.domain.member.entity.Member;
+import showMoim.api.domain.member.repository.MemberRepository;
 
 import javax.persistence.EntityManager;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
