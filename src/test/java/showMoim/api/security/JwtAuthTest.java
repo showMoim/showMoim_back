@@ -15,9 +15,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import showMoim.api.member.dto.MemberJoinDto.RegisterForm;
-import showMoim.api.member.dto.MemberLoginDto;
-import showMoim.api.member.service.MemberService;
+import showMoim.api.domain.member.dto.MemberJoinDto.RegisterForm;
+import showMoim.api.domain.member.dto.MemberLoginDto;
+import showMoim.api.domain.member.service.MemberService;
+import showMoim.api.global.security.JwtProperties;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
