@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -41,4 +42,7 @@ public class Group {
 
     @OneToMany(mappedBy = "member")
     private List<GroupMember> groupMemberList = new ArrayList<>();
+
+    @ManyToOne
+    private GroupCategory groupCategory;
 }
