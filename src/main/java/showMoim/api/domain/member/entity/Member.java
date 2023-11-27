@@ -12,9 +12,9 @@ import showMoim.api.global.common.enums.MemberRole;
 
 @Entity
 @Getter
-
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
+@Table(name = "showmoim_member")
 public class Member {
 
     @Id

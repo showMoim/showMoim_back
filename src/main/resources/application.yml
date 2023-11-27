@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none # in production -> none
+      ddl-auto: create # in production -> none
     properties:
       hibernate:
         show_sql: false
