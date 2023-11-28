@@ -3,39 +3,35 @@ package showMoim.api.domain.group.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import showMoim.api.domain.group.dto.GroupDto.GroupCreateForm;
 import showMoim.api.domain.group.dto.GroupDto.GroupJoinForm;
-import showMoim.api.domain.group.entity.Group;
 import showMoim.api.domain.group.service.GroupMemberService;
-import showMoim.api.domain.group.service.GroupService;
 import showMoim.api.domain.member.entity.Member;
 import showMoim.api.global.common.ApiResponse;
 import showMoim.api.global.security.auth.PrincipalDetails;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/group", produces = MediaType.APPLICATION_JSON_VALUE)
-public class GroupController {
-    private final GroupService groupService;
+@RequestMapping(value = "/api/group/member", produces = MediaType.APPLICATION_JSON_VALUE)
+public class GroupMemberController {
+
+    private final GroupMemberService groupMemberService;
 
     /**
-     * 모임 만들기
+     * 모임 가입 요청
      */
-    @PostMapping("/create")
-    public ApiResponse<?> createGroup(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                      @RequestBody GroupCreateForm groupCreateForm) {
+    @PostMapping("/join")
+    public ApiResponse<?> requestJoinGroup(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                           @RequestBody GroupJoinForm groupJoinForm) {
 
         Member member = principalDetails.getMember();
 
-        // 그룹 생성
-        Group group = groupService.createGroup(groupCreateForm, member);
+        // 가입 요청
+        groupMemberService.sendGroupJoinRequest(groupJoinForm, member);
 
-        return ApiResponse.of(ApiResponse.SUCCESS_STATUS, "모임 생성 성공", group);
+        return ApiResponse.of(ApiResponse.SUCCESS_STATUS, "모임 가입 요청 성공", null);
     }
-
 }

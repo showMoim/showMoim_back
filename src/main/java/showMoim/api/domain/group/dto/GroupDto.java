@@ -18,4 +18,14 @@ public class GroupDto {
 
         private Long groupCategoryId;
     }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GroupJoinForm {
+        private Long groupId;
+
+        private String message;
+    }
 }

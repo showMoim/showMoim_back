@@ -10,6 +10,7 @@ import showMoim.api.domain.group.entity.Group;
 import showMoim.api.domain.group.entity.GroupCategory;
 import showMoim.api.domain.group.entity.GroupMember;
 import showMoim.api.domain.group.repository.GroupCategoryRepository;
+import showMoim.api.domain.group.repository.GroupJoinRequestRepository;
 import showMoim.api.domain.group.repository.GroupMemberRepository;
 import showMoim.api.domain.group.repository.GroupRepository;
 import showMoim.api.domain.member.entity.Member;
@@ -47,9 +48,8 @@ public class GroupService {
             .build();
 
         groupMemberRepository.save(groupMember);
-        groupRepository.save(group);
 
-        return group;
+        return groupRepository.save(group);
     }
 
     public List<Group> searchGroup() {
