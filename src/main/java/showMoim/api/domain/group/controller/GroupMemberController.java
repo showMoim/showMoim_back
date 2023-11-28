@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import showMoim.api.domain.group.dto.GroupDto.GroupJoinAccept;
 import showMoim.api.domain.group.dto.GroupDto.GroupJoinForm;
 import showMoim.api.domain.group.service.GroupMemberService;
 import showMoim.api.domain.member.entity.Member;
@@ -33,5 +34,19 @@ public class GroupMemberController {
         groupMemberService.sendGroupJoinRequest(groupJoinForm, member);
 
         return ApiResponse.of(ApiResponse.SUCCESS_STATUS, "모임 가입 요청 성공", null);
+    }
+
+    /**
+     * 모임 가입 요청 수락
+     */
+    @PostMapping("/join/accept")
+    public ApiResponse<?> acceptJoinGroup(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                          @RequestBody GroupJoinAccept groupJoinAccept) {
+
+        Member member = principalDetails.getMember();
+
+        groupMemberService.acceptGroupJoinRequest(groupJoinAccept.getGroupJoinRequestId(), member);
+
+        return ApiResponse.of(ApiResponse.SUCCESS_STATUS, "모임 가입 수락 완료", null);
     }
 }

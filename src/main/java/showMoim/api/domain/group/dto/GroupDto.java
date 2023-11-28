@@ -28,4 +28,9 @@ public class GroupDto {
 
         private String message;
     }
+
+    @Data
+    public static class GroupJoinAccept {
+        private Long groupJoinRequestId;
+    }
 }

@@ -2,8 +2,9 @@ package showMoim.api.group.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static showMoim.api.domain.member.service.MemberService.ERROR_MESSAGE_EMAIL_EXIST;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -15,6 +16,8 @@ import showMoim.api.domain.group.dto.GroupDto.GroupCreateForm;
 import showMoim.api.domain.group.dto.GroupDto.GroupJoinForm;
 import showMoim.api.domain.group.entity.Group;
 import showMoim.api.domain.group.entity.GroupJoinRequest;
+import showMoim.api.domain.group.entity.GroupMember;
+import showMoim.api.domain.group.repository.GroupMemberRepository;
 import showMoim.api.domain.group.repository.GroupRepository;
 import showMoim.api.domain.group.service.GroupMemberService;
 import showMoim.api.domain.group.service.GroupService;
@@ -30,6 +33,9 @@ class GroupMemberServiceTest {
 
     @Autowired
     GroupRepository groupRepository;
+
+    @Autowired
+    GroupMemberRepository groupMemberRepository;
 
     @Autowired
     GroupService groupService;
@@ -57,5 +63,31 @@ class GroupMemberServiceTest {
         RuntimeException e = assertThrows(RuntimeException.class, joinWithExistMember);
         assertThat(e.getMessage()).contains(ErrorCode.MEMBER_ALREADY_EXIST_IN_GROUP.getMessage());
         assertThat(groupJoinRequest.getMember().getId()).isEqualTo(member2.getId());
+    }
+
+    @Test
+    public void 그룹가입수락_테스트() {
+        Member member1 = new Member("hello1@asd.com", "1234", "hello1");
+        Member member2 = new Member("hello2@asd.com", "1234", "hello2");
+        Member member3 = new Member("hello3@asd.com", "1234", "hello3");
+
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        memberRepository.save(member3);
+
+        Group group = groupService.createGroup(new GroupCreateForm("asd", "asd", 1L), member1);
+
+        GroupJoinRequest groupJoinRequest = groupMemberService.sendGroupJoinRequest(new GroupJoinForm(group.getId(), "msg"), member3);
+
+        // 권한 없는 경우 테스트
+        Executable acceptUnauthorized = () -> groupMemberService.acceptGroupJoinRequest(groupJoinRequest.getId(), member2);
+        RuntimeException e = assertThrows(RuntimeException.class, acceptUnauthorized);
+        assertThat(e.getMessage()).contains(ErrorCode.UNAUTHORIZED.getMessage());
+
+
+        // 정상 케이스 테스트
+        groupMemberService.acceptGroupJoinRequest(groupJoinRequest.getId(), member1);
+        List<GroupMember> result = groupMemberRepository.findByMemberAndGroup(member3, group);
+        assertTrue(result.size() > 0);
     }
 }
