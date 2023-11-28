@@ -38,7 +38,7 @@ public class JwtAuthTest {
     private MockMvc mockMvc;
 
     private final String API_URL = "http://localhost:8080";
-    private final String TEST_EMAIL_1 = "hello1@asd.com";
+    private final String TEST_EMAIL_1 = "auth_test_hello1@asd.com";
     private final String TEST_PW_1 = "123456";
 
     // 각 테스트 전에 실행
@@ -77,7 +77,8 @@ public class JwtAuthTest {
                 .content(gson.toJson(loginForm)))
                 // then
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.header().exists(JwtProperties.HEADER_STRING))
+                // .andExpect(MockMvcResultMatchers.header().exists(JwtProperties.HEADER_STRING))
+                .andExpect(MockMvcResultMatchers.cookie().exists(JwtProperties.ACCESS_TOKEN_COOKIE_NAME))
                 .andExpect(MockMvcResultMatchers.cookie().exists(JwtProperties.REFRESH_TOKEN_COOKIE_NAME))
                 .andDo(MockMvcResultHandlers.print());
     }
