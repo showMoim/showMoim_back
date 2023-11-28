@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilter(new JwtAuthorizationFilter(authenticationManager(), memberRepository))
             .authorizeRequests()
             .antMatchers(PUBLIC_API_PATTERN).permitAll()
-            .antMatchers("/api/member/**")
+            .antMatchers("/api/member/**", "/api/group/**")
             .access("hasRole('ROLE_MEMBER') or hasRole('ROLE_ADMIN')")
             .antMatchers("/api/admin/**")
             .access("hasRole('ROLE_ADMIN')")

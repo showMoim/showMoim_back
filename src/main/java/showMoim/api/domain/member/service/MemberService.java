@@ -21,11 +21,6 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public final static String ERROR_MESSAGE_EMAIL_EXIST = "이미 존재하는 이메일 입니다.";
-    public final static String ERROR_MESSAGE_PW_EMPTY = "비밀번호를 입력하셔야 합니다.";
-    public final static String ERROR_MESSAGE_PW_CONFIRM_NOT_MATCHED = "비밀번호가 일치하지 않습니다.";
-    public final static String ERROR_MESSAGE_PW_MIN_LENGTH = "비밀번호는 최소 6글자여야 합니다.";
-
     /**
      * 회원 가입
      */

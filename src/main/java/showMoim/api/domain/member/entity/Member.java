@@ -8,14 +8,15 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import showMoim.api.global.common.BaseEntity;
 import showMoim.api.global.common.enums.MemberRole;
 
 @Entity
 @Getter
-
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class Member {
+@Table(name = "showmoim_member")
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

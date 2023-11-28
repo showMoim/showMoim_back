@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
         e.printStackTrace();
 
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .status(e.getHttpStatus())
                 .body(ApiResponse.of(ApiResponse.ERROR_STATUS, e.getMessage(), e.getCode()));
     }
 }

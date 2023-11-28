@@ -9,10 +9,10 @@ import showMoim.api.domain.member.dto.MemberJoinDto.RegisterForm;
 import showMoim.api.domain.member.entity.Member;
 import showMoim.api.domain.member.repository.MemberRepository;
 import showMoim.api.domain.member.service.MemberService;
+import showMoim.api.global.common.ErrorCode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static showMoim.api.domain.member.service.MemberService.ERROR_MESSAGE_EMAIL_EXIST;
 
 @SpringBootTest
 @Transactional
@@ -40,6 +40,6 @@ class MemberServiceTest {
 
         // then
         RuntimeException e = assertThrows(RuntimeException.class, joinWithExistEmail);
-        assertThat(e.getMessage()).contains(ERROR_MESSAGE_EMAIL_EXIST);
+        assertThat(e.getMessage()).contains(ErrorCode.EMAIL_ALREADY_EXIST.getMessage());
     }
 }
