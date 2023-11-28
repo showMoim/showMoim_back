@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import showMoim.api.domain.member.entity.Member;
+import showMoim.api.global.common.BaseEntity;
 import showMoim.api.global.common.enums.GroupRole;
 
 /**
@@ -26,7 +27,7 @@ import showMoim.api.global.common.enums.GroupRole;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @ToString
-public class GroupMember {
+public class GroupMember extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

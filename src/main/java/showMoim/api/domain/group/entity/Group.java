@@ -18,6 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import showMoim.api.domain.member.entity.Member;
+import showMoim.api.global.common.BaseEntity;
 
 /**
  * 모임 테이블
@@ -29,7 +30,7 @@ import showMoim.api.domain.member.entity.Member;
 @AllArgsConstructor
 @ToString
 @Table(name = "showmoim_group")
-public class Group {
+public class Group extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

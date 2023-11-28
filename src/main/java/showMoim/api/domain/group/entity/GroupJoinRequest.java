@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import showMoim.api.domain.member.entity.Member;
+import showMoim.api.global.common.BaseEntity;
 
 /**
  * 모임 가입요청
@@ -24,7 +25,7 @@ import showMoim.api.domain.member.entity.Member;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @ToString
-public class GroupJoinRequest {
+public class GroupJoinRequest extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

@@ -8,5 +8,5 @@ import showMoim.api.domain.group.entity.Group;
 
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
-    Slice<Group> findByTitleContainsIgnoreCase(String title, Pageable pageable);
+    Slice<Group> findByTitleContainsIgnoreCaseOrderByCreatedAtDesc(String title, Pageable pageable);
 }

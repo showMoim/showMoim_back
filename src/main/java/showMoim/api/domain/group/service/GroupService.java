@@ -53,6 +53,6 @@ public class GroupService {
     }
 
     public Slice<Group> getGroupList(String keyword, Pageable pageable) {
-        return groupRepository.findByTitleContainsIgnoreCase(keyword, pageable);
+        return groupRepository.findByTitleContainsIgnoreCaseOrderByCreatedAtDesc(keyword, pageable);
     }
 }
