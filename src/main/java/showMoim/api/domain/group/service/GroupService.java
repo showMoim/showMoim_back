@@ -1,8 +1,8 @@
 package showMoim.api.domain.group.service;
 
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import showMoim.api.domain.group.dto.GroupDto.GroupCreateForm;
@@ -52,7 +52,7 @@ public class GroupService {
         return groupRepository.save(group);
     }
 
-    public List<Group> searchGroup() {
-        return null;
+    public Slice<Group> getGroupList(String keyword, Pageable pageable) {
+        return groupRepository.findByTitleContainsIgnoreCase(keyword, pageable);
     }
 }
